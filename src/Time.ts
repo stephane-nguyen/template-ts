@@ -2,12 +2,25 @@ export class Time {
   private hour: number;
   private minute: number;
   private second: number;
-  private readonly ONE_SECOND = 1000; // 1 second = 1000 milliseconds
+  private readonly ONE_SECOND = 940; // 1 second = 1000 milliseconds
+  private readonly FRENCH_DATE_FORMAT = "fr-FR";
   private isAmPmFormat = false;
   private timeZone: string;
+  private options: Intl.DateTimeFormatOptions;
 
-  constructor() {
-    const now = new Date();
+  constructor(timeZone: string) {
+    this.timeZone = timeZone;
+
+    this.options = {
+      timeZone: timeZone,
+      hour12: false,
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    };
+
+    const dateString = new Date().toLocaleDateString(this.FRENCH_DATE_FORMAT, this.options);
+    const now = new Date(dateString);
     this.hour = now.getHours();
     this.minute = now.getMinutes();
     this.second = now.getSeconds();
@@ -19,9 +32,9 @@ export class Time {
 
     if (this.isAmPmFormat) amPmDesignation = this.getAmPmDesignation();
 
-    return `${formattedHour}:${this.formatNumber(this.minute)}:${this.formatNumber(
-      this.second
-    )} ${amPmDesignation}`;
+    return `${this.getTimeZone()}: ${formattedHour}:${this.formatNumber(
+      this.minute
+    )}:${this.formatNumber(this.second)} ${amPmDesignation}`;
   }
 
   private get12HourFormat(): number {
@@ -89,6 +102,18 @@ export class Time {
     this.isAmPmFormat = value;
   }
 
+  toggle24hAndAmPmFormat() {
+    this.options.hour12 = !this.options.hour12;
+  }
+
+  getTimeZone() {
+    return this.timeZone;
+  }
+
+  setTimeZone(timeZone: string) {
+    this.timeZone = timeZone;
+  }
+
   addOneHour() {
     this.hour++;
     if (this.hour === 24) {
@@ -116,5 +141,13 @@ export class Time {
         }
       }
     }
+  }
+
+  reset() {
+    const dateString = new Date().toLocaleDateString(this.FRENCH_DATE_FORMAT, this.options);
+    const now = new Date(dateString);
+    this.setHour(now.getHours());
+    this.setMinute(now.getMinutes());
+    this.setSecond(now.getSeconds());
   }
 }
