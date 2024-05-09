@@ -1,13 +1,15 @@
 import { Time } from "./Time";
 
 export class Button {
-  protected element: HTMLElement;
+  protected element: HTMLButtonElement;
   private buttonStrategy?: ButtonStrategy;
 
-  constructor(textContent: string) {
+  constructor(textContent: string, buttonStrategy?: ButtonStrategy) {
     this.element = document.createElement("button");
     this.element.textContent = textContent;
     this.element.addEventListener("click", this.press.bind(this));
+    document.body.appendChild(this.element);
+    this.buttonStrategy = buttonStrategy;
   }
 
   private press() {
@@ -22,7 +24,6 @@ export class ModeButton extends Button {
     super("Mode");
     this.buttonState = new NothingState();
     this.element.addEventListener("click", this.onClick.bind(this));
-    document.body.appendChild(this.element);
   }
 
   private onClick() {
@@ -47,7 +48,6 @@ export class IncreaseButton extends Button {
     this.modeButton = modeButton;
     this.time = time;
     this.element.addEventListener("click", this.onClick.bind(this));
-    document.body.appendChild(this.element);
   }
 
   private onClick() {
@@ -102,9 +102,19 @@ interface ButtonStrategy {
   press(): void;
 }
 
-class LightStrategy implements ButtonStrategy {
+export class LightStrategy implements ButtonStrategy {
+  private timeSpan: HTMLSpanElement;
+
+  constructor(timeSpan: HTMLSpanElement) {
+    this.timeSpan = timeSpan;
+  }
+
   press(): void {
-    console.log("Light button pressed.");
+    if (this.timeSpan.style.backgroundColor === "yellow") {
+      this.timeSpan.style.backgroundColor = "";
+    } else {
+      this.timeSpan.style.backgroundColor = "yellow";
+    }
   }
 }
 

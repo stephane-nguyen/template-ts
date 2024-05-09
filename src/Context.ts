@@ -1,32 +1,36 @@
-import { ModeButton, IncreaseButton } from "./Button";
+import { ModeButton, IncreaseButton, Button, LightStrategy } from "./Button";
 import { Time } from "./Time";
 
 export class Context {
   private modeButton: ModeButton;
   private increaseButton: IncreaseButton;
+  private lightButton: Button;
 
-  private lightOn: boolean;
+  private timeContainer: HTMLDivElement;
+  private timeSpan: HTMLSpanElement;
 
-  private timeText: HTMLDivElement;
   private intervalId: NodeJS.Timeout;
 
   private time: Time;
 
   constructor() {
-    this.lightOn = false;
-    this.modeButton = new ModeButton();
-    this.time = new Time();
-    this.increaseButton = new IncreaseButton(this.modeButton, this.time);
+    this.timeContainer = document.createElement("div");
+    const timeSpan = document.createElement("span");
+    this.timeContainer.appendChild(timeSpan);
+    this.timeSpan = timeSpan;
+    document.body.appendChild(this.timeContainer);
 
-    this.timeText = document.createElement("div");
-    document.body.appendChild(this.timeText);
+    this.time = new Time();
+
+    this.modeButton = new ModeButton();
+    this.increaseButton = new IncreaseButton(this.modeButton, this.time);
+    this.lightButton = new Button("Light", new LightStrategy(timeSpan));
 
     this.intervalId = setInterval(() => this.updateTimeText(), this.time.oneSecond());
   }
 
   private updateTimeText() {
     this.time.tick();
-    const timeString = this.time.toString();
-    this.timeText.textContent = timeString;
+    this.timeSpan.textContent = this.time.toString();
   }
 }
