@@ -1,5 +1,7 @@
-import './index.css';
-import { MyClass } from './example-unit';
+import "./index.css";
+import { Context } from "./Context";
 
-const a = new MyClass(2);
-console.log('number is', a.get());
+// API to get all timezone : http://worldtimeapi.org/api/timezone
+// Check http://worldtimeapi.org/pages/examples
+
+let context = new Context();
