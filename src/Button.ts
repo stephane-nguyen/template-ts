@@ -175,10 +175,20 @@ export class ResetStrategy implements ButtonStrategy {
     this.timeSpan.textContent = this.time.toString();
   }
 }
-
 export class CreateWatchStrategy implements ButtonStrategy {
-  press(): Context {
-    return new Context("Europe/Paris");
+  private getTimezone: () => string;
+
+  constructor(getTimezone: () => string) {
+    this.getTimezone = getTimezone;
+  }
+
+  press(): Context | void {
+    const timezone = this.getTimezone();
+    if (timezone === "Select a timezone" || timezone === "") {
+      alert("Select a timezone please");
+    } else {
+      return new Context(timezone);
+    }
   }
 }
 

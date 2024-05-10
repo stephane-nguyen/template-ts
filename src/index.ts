@@ -1,13 +1,24 @@
 import "./index.css";
 import { Context } from "./Context";
 import { Button, CreateWatchStrategy } from "./Button";
+import { TimeUtils } from "./TimeUtils";
 
-// API to get all timezone : http://worldtimeapi.org/api/timezone
-// Check http://worldtimeapi.org/pages/examples
+const timeUtils = new TimeUtils();
+
 const container = document.createElement("div");
 document.body.appendChild(container);
 
-const createWatchButton = new Button(container, "Create watch", new CreateWatchStrategy());
+timeUtils.populateTimezonesInSelectBar();
+
+document
+  .getElementById("timezoneSelect")
+  .addEventListener("change", timeUtils.getSelectedTimezoneInSelectBar);
+
+const createWatchButton = new Button(
+  container,
+  "Create watch",
+  new CreateWatchStrategy(() => timeUtils.getSelectedTimezoneInSelectBar())
+);
 
 const contextGM = new Context("Europe/Paris");
 const contextGMTPlus1 = new Context("Europe/London");
