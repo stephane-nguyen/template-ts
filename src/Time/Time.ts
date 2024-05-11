@@ -69,6 +69,17 @@ export class Time {
     this.hour = hour;
   }
 
+  incrementMinute() {
+    const maxMinute = 59;
+    const initialMinuteValue = 0;
+    if (this.getMinute() === maxMinute) {
+      this.incrementHour();
+      this.setMinute(initialMinuteValue);
+    } else {
+      this.setMinute(this.getMinute() + 1);
+    }
+  }
+
   incrementHour() {
     const maxHour = 23;
     const initialHourValue = 0;
@@ -76,16 +87,6 @@ export class Time {
       this.setHour(initialHourValue);
     } else {
       this.setHour(this.getHour() + 1);
-    }
-  }
-
-  incrementMinute() {
-    const maxMinute = 59;
-    const initialMinuteValue = 0;
-    if (this.getMinute() === maxMinute) {
-      this.setMinute(initialMinuteValue);
-    } else {
-      this.setMinute(this.getMinute() + 1);
     }
   }
 
