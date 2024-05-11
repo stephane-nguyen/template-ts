@@ -1,4 +1,4 @@
-import { Context } from "../Context";
+import { Watch } from "../Watch";
 import { Time } from "../Time/Time";
 import { ModeButton } from "./Button";
 import { NothingState } from "./ButtonState";
@@ -44,12 +44,12 @@ export class CreateWatchStrategy implements ButtonStrategy {
     this.getTimezone = getTimezone;
   }
 
-  press(): Context | void {
+  press(): Watch | void {
     const timezone = this.getTimezone();
     if (timezone === "Select a timezone" || timezone === "") {
       alert("Select a timezone please");
     } else {
-      return new Context(timezone);
+      return new Watch(timezone);
     }
   }
 }

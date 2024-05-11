@@ -2,7 +2,7 @@ import { ModeButton, IncreaseButton, Button } from "./Button/Button";
 import { LightStrategy, ChangeTimeFormatStrategy } from "./Button/ButtonStrategy";
 import { Time } from "./Time/Time";
 
-export class Context {
+export class Watch {
   private modeButton: ModeButton;
   private increaseButton: IncreaseButton;
   private lightButton: Button;

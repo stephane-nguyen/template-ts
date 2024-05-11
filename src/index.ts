@@ -1,5 +1,5 @@
 import "./index.css";
-import { Context } from "./Context";
+import { Watch } from "./Watch";
 import { Button } from "./Button/Button";
 import { TimeZoneUtils } from "./Time/TimeZoneUtils";
 import { CreateWatchStrategy } from "./Button/ButtonStrategy";
@@ -21,7 +21,7 @@ const createWatchButton = new Button(
   new CreateWatchStrategy(() => timeZoneUtils.getSelectedTimezoneInSelectBar())
 );
 
-const contextGM = new Context("Europe/Paris");
-const contextGMTPlus1 = new Context("Europe/London");
-const contextGMTPlus2 = new Context("Australia/Melbourne");
-const contextGMTPlus3 = new Context("America/New_York");
+const WatchGM = new Watch("Europe/Paris");
+const WatchGMTPlus1 = new Watch("Europe/London");
+const WatchGMTPlus2 = new Watch("Australia/Melbourne");
+const WatchGMTPlus3 = new Watch("America/New_York");
