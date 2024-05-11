@@ -31,15 +31,13 @@ export class Button {
 
 export class ModeButton extends Button {
   private buttonState: ButtonState;
-  private timeSpan: HTMLSpanElement;
   private time: Time;
   private hasBeenClickedOnce = false;
   private resetButton?: Button;
 
-  constructor(watchContainer: HTMLDivElement, timeSpan: HTMLSpanElement, time: Time) {
+  constructor(watchContainer: HTMLDivElement, time: Time) {
     super(watchContainer, "Mode");
     this.buttonState = new NothingState();
-    this.timeSpan = timeSpan;
     this.time = time;
     this.element.addEventListener("click", this.onClick.bind(this));
   }

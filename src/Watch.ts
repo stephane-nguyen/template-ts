@@ -24,7 +24,7 @@ export class Watch {
 
     this.time = new Time(timezone);
 
-    this.modeButton = new ModeButton(this.watchContainer, this.timeSpan, this.time);
+    this.modeButton = new ModeButton(this.watchContainer, this.time);
     this.increaseButton = new IncreaseButton(this.watchContainer, this.modeButton, this.time);
     this.lightButton = new Button(this.watchContainer, "Light", new LightStrategy(this.timeSpan));
     this.changeTimeFormatButton = new Button(
