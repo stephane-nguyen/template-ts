@@ -1,6 +1,4 @@
-export class TimeUtils {
-  constructor() {}
-
+export class TimeZoneUtils {
   async populateTimezonesInSelectBar() {
     const timezones = await this.getTimezones();
     this.populateSelectDropdown(timezones);

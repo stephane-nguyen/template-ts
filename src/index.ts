@@ -1,23 +1,24 @@
 import "./index.css";
 import { Context } from "./Context";
-import { Button, CreateWatchStrategy } from "./Button";
-import { TimeUtils } from "./TimeUtils";
+import { Button } from "./Button/Button";
+import { TimeZoneUtils } from "./Time/TimeZoneUtils";
+import { CreateWatchStrategy } from "./Button/ButtonStrategy";
 
-const timeUtils = new TimeUtils();
+const timeZoneUtils = new TimeZoneUtils();
 
 const container = document.createElement("div");
 document.body.appendChild(container);
 
-timeUtils.populateTimezonesInSelectBar();
+timeZoneUtils.populateTimezonesInSelectBar();
 
 document
   .getElementById("timezoneSelect")
-  .addEventListener("change", timeUtils.getSelectedTimezoneInSelectBar);
+  .addEventListener("change", timeZoneUtils.getSelectedTimezoneInSelectBar);
 
 const createWatchButton = new Button(
   container,
   "Create watch",
-  new CreateWatchStrategy(() => timeUtils.getSelectedTimezoneInSelectBar())
+  new CreateWatchStrategy(() => timeZoneUtils.getSelectedTimezoneInSelectBar())
 );
 
 const contextGM = new Context("Europe/Paris");

@@ -1,5 +1,6 @@
-import { Context } from "./Context";
-import { Time } from "./Time";
+import { Time } from "../Time/Time";
+import { ButtonState, HourState, MinuteState, NothingState } from "./ButtonState";
+import { ButtonStrategy, ResetStrategy } from "./ButtonStrategy";
 
 export class Button {
   protected element: HTMLButtonElement;
@@ -56,7 +57,7 @@ export class ModeButton extends Button {
       this.resetButton = new Button(
         this.watchContainer,
         "Reset",
-        new ResetStrategy(this.timeSpan, this.time, this)
+        new ResetStrategy(this.time, this)
       );
       this.resetButton.getElement().addEventListener("click", this.onResetButtonClick.bind(this));
     }
@@ -98,102 +99,11 @@ export class IncreaseButton extends Button {
     const modeState = this.modeButton.getState();
 
     if (modeState instanceof HourState) {
-      this.time.setHour(this.time.getHour() + 1);
+      this.time.incrementHour();
     } else if (modeState instanceof MinuteState) {
-      this.time.setMinute(this.time.getMinute() + 1);
+      this.time.incrementMinute();
     }
 
     console.log("Updated time:", this.time.toString());
-  }
-}
-
-interface ButtonState {
-  changeState(button: ModeButton): void;
-}
-
-export class NothingState implements ButtonState {
-  changeState(button: ModeButton): void {
-    if (button.getState() instanceof NothingState) {
-      button.setState(new HourState());
-      console.log("Changed state to: Hour");
-    }
-  }
-}
-
-class HourState implements ButtonState {
-  changeState(button: ModeButton): void {
-    if (button.getState() instanceof HourState) {
-      button.setState(new MinuteState());
-      console.log("Changed state to: Minute");
-    }
-  }
-}
-
-class MinuteState implements ButtonState {
-  changeState(button: ModeButton): void {
-    if (button.getState() instanceof MinuteState) {
-      button.setState(new NothingState());
-      console.log("Changed state to: Nothing");
-    }
-  }
-}
-
-interface ButtonStrategy {
-  press(): void;
-}
-
-export class LightStrategy implements ButtonStrategy {
-  private timeSpan: HTMLSpanElement;
-
-  constructor(timeSpan: HTMLSpanElement) {
-    this.timeSpan = timeSpan;
-  }
-
-  press(): void {
-    if (this.timeSpan.style.backgroundColor === "yellow") {
-      this.timeSpan.style.backgroundColor = "";
-    } else {
-      this.timeSpan.style.backgroundColor = "yellow";
-    }
-  }
-}
-
-export class ResetStrategy implements ButtonStrategy {
-  private timeSpan: HTMLSpanElement;
-  private time: Time;
-  private modeButton: ModeButton;
-
-  constructor(timeSpan: HTMLSpanElement, time: Time, modeButton: ModeButton) {
-    this.timeSpan = timeSpan;
-    this.time = time;
-    this.modeButton = modeButton;
-  }
-
-  press(): void {
-    this.modeButton.setState(new NothingState());
-    this.time.reset();
-    this.timeSpan.textContent = this.time.toString();
-  }
-}
-export class CreateWatchStrategy implements ButtonStrategy {
-  private getTimezone: () => string;
-
-  constructor(getTimezone: () => string) {
-    this.getTimezone = getTimezone;
-  }
-
-  press(): Context | void {
-    const timezone = this.getTimezone();
-    if (timezone === "Select a timezone" || timezone === "") {
-      alert("Select a timezone please");
-    } else {
-      return new Context(timezone);
-    }
-  }
-}
-
-export class ChangeDisplayStrategy implements ButtonStrategy {
-  press(): void {
-    console.log("Change display button pressed.");
   }
 }
