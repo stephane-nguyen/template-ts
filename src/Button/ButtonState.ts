@@ -1,32 +1,47 @@
-import { ModeButton } from "./Button";
+import { Time } from "../Time/Time";
+import { Watch } from "../Watch";
 
-export interface ButtonState {
-  changeState(button: ModeButton): void;
+export abstract class ButtonState {
+  protected watch: Watch;
+  constructor(watch: Watch) {
+    this.watch = watch;
+  }
+  public abstract changeState(): void;
+  public abstract handleClick(time: Time): void;
 }
 
-export class NothingState implements ButtonState {
-  changeState(button: ModeButton): void {
-    if (button.getState() instanceof NothingState) {
-      button.setState(new HourState());
-      console.log("Changed state to: Hour");
-    }
+export class NothingState extends ButtonState {
+  public getNextState(): ButtonState {
+    return new HourState(this.watch);
+  }
+
+  changeState(): void {
+    this.watch.setState(new HourState(this.watch));
+  }
+
+  handleClick(time: Time): void {
+    // Do nothing
   }
 }
 
-export class HourState implements ButtonState {
-  changeState(button: ModeButton): void {
-    if (button.getState() instanceof HourState) {
-      button.setState(new MinuteState());
-      console.log("Changed state to: Minute");
-    }
+export class HourState extends ButtonState {
+  changeState(): void {
+    this.watch.setState(new MinuteState(this.watch));
+  }
+
+  handleClick(time: Time): void {
+    time.incrementHour();
+    console.log("Updated time:", time.toString());
   }
 }
 
-export class MinuteState implements ButtonState {
-  changeState(button: ModeButton): void {
-    if (button.getState() instanceof MinuteState) {
-      button.setState(new NothingState());
-      console.log("Changed state to: Nothing");
-    }
+export class MinuteState extends ButtonState {
+  changeState(): void {
+    this.watch.setState(new NothingState(this.watch));
+  }
+
+  handleClick(time: Time): void {
+    time.incrementMinute();
+    console.log("Updated time:", time.toString());
   }
 }

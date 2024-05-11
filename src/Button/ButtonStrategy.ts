@@ -1,6 +1,5 @@
 import { Watch } from "../Watch";
 import { Time } from "../Time/Time";
-import { ModeButton } from "./Button";
 import { NothingState } from "./ButtonState";
 
 export interface ButtonStrategy {
@@ -25,18 +24,19 @@ export class LightStrategy implements ButtonStrategy {
 
 export class ResetStrategy implements ButtonStrategy {
   private time: Time;
-  private modeButton: ModeButton;
+  private watch: Watch;
 
-  constructor(time: Time, modeButton: ModeButton) {
+  constructor(time: Time, watch: Watch) {
     this.time = time;
-    this.modeButton = modeButton;
+    this.watch = watch;
   }
 
   press(): void {
-    this.modeButton.setState(new NothingState());
+    this.watch.setState(new NothingState(this.watch));
     this.time.reset();
   }
 }
+
 export class CreateWatchStrategy implements ButtonStrategy {
   private getTimezone: () => string;
 
