@@ -25,7 +25,8 @@ export class Watch {
     this.watchContainer.appendChild(this.timeSpan);
     document.body.appendChild(this.watchContainer);
 
-    this.state = new NothingState(this);
+    // declare in Watch rather than mode button to share state with increaseButton rather
+    this.state = new NothingState();
 
     this.time = new Time(timezone);
 
@@ -41,12 +42,12 @@ export class Watch {
     this.intervalId = setInterval(() => this.updateTimeText(), this.time.oneSecond());
   }
 
-  private updateTimeText() {
+  private updateTimeText(): void {
     this.time.tick();
     this.timeSpan.textContent = this.time.toString();
   }
 
-  public getState() {
+  public getState(): ButtonState {
     return this.state;
   }
 

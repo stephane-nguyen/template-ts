@@ -47,7 +47,8 @@ export class ModeButton extends Button {
       this.createResetButtonIfNotCreated();
       this.hasBeenClickedOnce = true;
     }
-    this.watch.getState().changeState();
+    const nextState = this.watch.getState().getNextState();
+    this.watch.setState(nextState);
   }
 
   private createResetButtonIfNotCreated() {

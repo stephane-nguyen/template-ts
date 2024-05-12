@@ -32,7 +32,7 @@ export class ResetStrategy implements ButtonStrategy {
   }
 
   press(): void {
-    this.watch.setState(new NothingState(this.watch));
+    this.watch.setState(new NothingState());
     this.time.reset();
   }
 }
