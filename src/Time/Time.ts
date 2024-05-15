@@ -9,12 +9,19 @@ export class Time {
   private timeZone: string;
   private isAmPmFormat = false;
   private timeDisplaying = new TimeDisplaying(this);
-  private options: Intl.DateTimeFormatOptions;
 
   constructor(timeZone: string) {
     this.timeZone = timeZone;
 
-    this.options = {
+    const [hour, minute, second] = this.getTimeComponents(timeZone);
+
+    this.hour = hour;
+    this.minute = minute;
+    this.second = second;
+  }
+
+  getTimeComponents(timeZone: string): [number, number, number] {
+    const options: Intl.DateTimeFormatOptions = {
       timeZone: timeZone,
       hour12: false,
       hour: "numeric",
@@ -22,13 +29,11 @@ export class Time {
       second: "numeric",
     };
 
-    const dateString = new Date().toLocaleDateString(this.DATE_FORMAT_LANGUAGE, this.options);
+    const dateString = new Date().toLocaleDateString(this.DATE_FORMAT_LANGUAGE, options);
     const timeString = dateString.split(" ")[1];
     const [hour, minute, second] = timeString.split(":").map(Number);
 
-    this.hour = hour;
-    this.minute = minute;
-    this.second = second;
+    return [hour, minute, second];
   }
 
   toString() {
@@ -125,10 +130,6 @@ export class Time {
     this.timeZone = timeZone;
   }
 
-  getOptions() {
-    return this.options;
-  }
-
   tick() {
     // Continuous clock
     this.second++;
@@ -146,11 +147,11 @@ export class Time {
   }
 
   reset() {
-    const dateString = new Date().toLocaleDateString(this.DATE_FORMAT_LANGUAGE, this.options);
-    const now = new Date(dateString);
+    const [hour, minute, second] = this.getTimeComponents(this.getTimeZone());
+
     this.setIsAmPmFormat(false);
-    this.setHour(now.getHours());
-    this.setMinute(now.getMinutes());
-    this.setSecond(now.getSeconds());
+    this.setHour(hour);
+    this.setMinute(minute);
+    this.setSecond(second);
   }
 }
