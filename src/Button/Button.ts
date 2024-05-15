@@ -16,6 +16,8 @@ export class Button {
     this.watchContainer = watchContainer;
     this.element = document.createElement("button");
     this.element.textContent = textContent;
+    this.element.classList.add("button");
+
     this.element.addEventListener("click", this.press.bind(this));
     this.watchContainer.appendChild(this.element);
   }
