@@ -53,10 +53,8 @@ export class Time {
 
     let timeString = `${this.getTimeZone()}: ${hour}:${minutes}:${seconds}`;
 
-    if (this.getIsAmPmFormat()) {
-      const amPm = this.timeDisplaying.getAmPmDesignation();
-      timeString += ` ${amPm}`;
-    }
+    const amPm = this.timeDisplaying.getAmPmDesignation();
+    timeString += `${amPm}`;
 
     return timeString;
   }

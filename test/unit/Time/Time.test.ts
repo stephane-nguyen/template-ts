@@ -28,7 +28,7 @@ describe("Time", () => {
       time.setMinute(30);
       time.setSecond(45);
       time.setIsAmPmFormat(true);
-      const expectedString = "Europe/Paris: 06:30:45 PM";
+      const expectedString = "Europe/Paris: 06:30:45PM";
       expect(time.toString()).toBe(expectedString);
     });
 
@@ -37,7 +37,7 @@ describe("Time", () => {
       time.setMinute(30);
       time.setSecond(45);
       time.setIsAmPmFormat(true);
-      const expectedString = "Europe/Paris: 12:30:45 AM";
+      const expectedString = "Europe/Paris: 12:30:45AM";
       expect(time.toString()).toBe(expectedString);
     });
   });

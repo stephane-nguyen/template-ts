@@ -12,8 +12,11 @@ export class Vector2D {
     const maxX = window.innerWidth;
     const minY = 50;
     const maxY = window.innerHeight;
-    const randomX = Math.random() * (maxX - minX) + minX;
-    const randomY = Math.random() * (maxY - minY) + minY;
+    const possibleXValues = maxX - minX;
+    const possibleYValues = maxY - minY;
+
+    const randomX = Math.random() * possibleXValues + minX; //[0, possibleXValues) to [minX, maxX).
+    const randomY = Math.random() * possibleYValues + minY;
 
     return new Vector2D(randomX, randomY);
   }
