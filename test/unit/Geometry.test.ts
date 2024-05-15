@@ -1,4 +1,4 @@
-import { Vector2D, Matrix3x3 } from "../../../src/Geometry";
+import { Vector2D, Matrix3x3 } from "../../src/Geometry";
 
 describe("Matrix3x3", () => {
   describe("constructor", () => {
@@ -237,6 +237,3 @@ describe("Matrix3x3", () => {
     });
   });
 });
-function adjugateMatrix(cofactor: Matrix3x3) {
-  throw new Error("Function not implemented.");
-}
