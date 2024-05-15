@@ -65,3 +65,15 @@ export class ChangeTimeFormatStrategy implements ButtonStrategy {
     this.time.setIsAmPmFormat(!this.time.getIsAmPmFormat());
   }
 }
+
+export class AnimateStrategy implements ButtonStrategy {
+  private watch: Watch;
+
+  constructor(watch: Watch) {
+    this.watch = watch;
+  }
+
+  press(): void {
+    this.watch.animate();
+  }
+}

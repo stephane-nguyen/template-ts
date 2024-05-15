@@ -7,6 +7,29 @@ export class Vector2D {
     this.y = y;
   }
 
+  static generateRandomPoint(): Vector2D {
+    const minX = 50;
+    const maxX = window.innerWidth;
+    const minY = 50;
+    const maxY = window.innerHeight;
+    const randomX = Math.random() * (maxX - minX) + minX;
+    const randomY = Math.random() * (maxY - minY) + minY;
+
+    return new Vector2D(randomX, randomY);
+  }
+
+  public generateUI(point: Vector2D, color: string): HTMLDivElement {
+    const blockDiv = document.createElement("div");
+    blockDiv.classList.add("block");
+    blockDiv.style.position = "absolute";
+    blockDiv.style.left = `${point.getX()}px`;
+    blockDiv.style.top = `${point.getY()}px`;
+    blockDiv.style.width = "10px";
+    blockDiv.style.height = "10px";
+    blockDiv.style.backgroundColor = color;
+    return blockDiv;
+  }
+
   getX(): number {
     return this.x;
   }
@@ -177,22 +200,16 @@ export class Matrix3x3 {
   static determinantOf2x2(matrix: number[][]): number {
     return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
   }
-  equals(other: Matrix3x3): boolean {
-    const thisElements = this.getElements();
-    const otherElements = other.getElements();
-    if (
-      thisElements.length !== otherElements.length ||
-      thisElements[0].length !== otherElements[0].length
-    ) {
-      return false;
-    }
-    for (let i = 0; i < thisElements.length; i++) {
-      for (let j = 0; j < thisElements[0].length; j++) {
-        if (thisElements[i][j] !== otherElements[i][j]) {
-          return false;
-        }
-      }
-    }
-    return true;
+
+  static rotateAroundPoint(angle: number, center: Vector2D): Matrix3x3 {
+    const translationToOrigin = Matrix3x3.translation(-center.getX(), -center.getY());
+    const rotationMatrix = Matrix3x3.rotate(angle);
+
+    // Translation back to the original position
+    // Inverse to unapply a Transformation
+    const translationBack = translationToOrigin.inverse();
+
+    // Combining transformation matrices allows us to apply multiple transformations (such as rotation, scaling, and translation) to an object in a single step.
+    return translationBack.multiply(rotationMatrix).multiply(translationToOrigin);
   }
 }
