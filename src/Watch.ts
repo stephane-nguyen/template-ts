@@ -51,10 +51,10 @@ export class Watch {
     this.animateButton = new Button(this.watchContainer, "Animate", new AnimateStrategy(this));
 
     this.intervalId = setInterval(() => this.updateTimeText(), this.time.oneSecond());
-    this.position = new Vector2D(
-      this.watchContainer.offsetWidth / 2,
-      this.watchContainer.offsetHeight / 2
-    );
+
+    const watchXCenter = this.watchContainer.offsetWidth / 2;
+    const watchYCenter = this.watchContainer.offsetHeight / 2;
+    this.position = new Vector2D(watchXCenter, watchYCenter);
 
     this.originalPosition = this.position;
 
@@ -76,19 +76,47 @@ export class Watch {
   }
 
   public animate(): void {
+    const rotationMatrix = this.determineRotationMatrixBasedOnRandomPoint();
+
+    // Rotate the watch continuously until it reaches full rotation
+    const fullRotationAngle = 360;
     setInterval(() => {
-      this.scale();
-      this.rotate();
-    }, 500);
+      this.setRotationAngle(this.getRotationAngle() + 20);
+
+      const transformedPosition = rotationMatrix.transformPoint(this.getPosition());
+
+      this.watchContainer.style.transform = `translate(${transformedPosition.getX()}px, ${transformedPosition.getY()}px) rotate(${this.getRotationAngle()}deg)`;
+
+      if (this.getRotationAngle() >= fullRotationAngle) {
+        this.scale();
+        this.setRotationAngle(0);
+      }
+    }, 100);
+  }
+
+  private determineRotationMatrixBasedOnRandomPoint(): Matrix3x3 {
+    const pos = this.getPositionFromEntireWindow(this.watchContainer);
+    const isNearRandomPointX = Math.abs(randomPoint.getX() - pos.getX()) < 100;
+    const isNearRandomPointY = Math.abs(randomPoint.getY() - pos.getY()) < 100;
+
+    let rotationMatrix;
+
+    if (isNearRandomPointX && isNearRandomPointY) {
+      rotationMatrix = Matrix3x3.rotateAroundPoint(this.rotationAngle, randomPoint);
+    } else {
+      rotationMatrix = Matrix3x3.rotateAroundPoint(this.rotationAngle, this.position);
+    }
+
+    return rotationMatrix;
   }
 
   public scale(): void {
     const scaleUpLimit = this.originalPosition.getY() + 30; // 30 is arbitrary
-    console.log(this.originalPosition.getY());
+    const scaleDownLimit = this.originalPosition.getY() - 30; // 30 is arbitrary
+
     if (this.position.getY() <= scaleUpLimit) {
       this.scaleUp();
-      console.log(this.position.getY());
-    } else {
+    } else if (this.position.getY() >= scaleDownLimit) {
       this.scaleDown();
     }
 
@@ -110,21 +138,11 @@ export class Watch {
     this.setScaleFactor(this.scaleFactor - TEN_POURCENT_OF_SCALE_FACTOR);
   }
 
-  public rotate(): void {
-    const twenty_degree = 20;
-    this.setRotationAngle(this.rotationAngle + twenty_degree);
-
-    let rotationMatrix;
-    if (randomPoint.getX() < 50 && randomPoint.getY() < 50) {
-      rotationMatrix = Matrix3x3.rotateAroundPoint(this.rotationAngle, randomPoint);
-    } else {
-      rotationMatrix = Matrix3x3.rotateAroundPoint(this.rotationAngle, this.position);
-    }
-
-    const transformedPosition = rotationMatrix.transformPoint(this.position);
-    this.watchContainer.style.transform = `translate(${transformedPosition.getX()}px, ${transformedPosition.getY()}px) rotate(${
-      this.rotationAngle
-    }deg)`;
+  public getPositionFromEntireWindow(watchContainer: HTMLDivElement): Vector2D {
+    const rect = watchContainer.getBoundingClientRect();
+    const x = rect.left + window.scrollX;
+    const y = rect.top + window.scrollY;
+    return new Vector2D(x, y);
   }
 
   getPosition(): Vector2D {
