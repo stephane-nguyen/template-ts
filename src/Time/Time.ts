@@ -16,18 +16,21 @@ export class Time {
 
     this.options = {
       timeZone: timeZone,
-      hour12: false, // do not use the switching because we need to keep track of the increase button anyway
+      hour12: false,
       hour: "numeric",
       minute: "numeric",
       second: "numeric",
     };
 
     const dateString = new Date().toLocaleDateString(this.DATE_FORMAT_LANGUAGE, this.options);
-    const now = new Date(dateString);
-    this.hour = now.getHours();
-    this.minute = now.getMinutes();
-    this.second = now.getSeconds();
+    const timeString = dateString.split(" ")[1];
+    const [hour, minute, second] = timeString.split(":").map(Number);
+
+    this.hour = hour;
+    this.minute = minute;
+    this.second = second;
   }
+
   toString() {
     let hour;
     if (this.getIsAmPmFormat()) {
